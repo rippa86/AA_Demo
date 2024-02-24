@@ -19,12 +19,18 @@
         path: /tmp/openscap
         state: directory
         mode: '0755'
-    
+
     - name: create oscap results directoryz
       ansible.builtin.file:
-        path: "/tmp/open_scap/{{ datetime }}_results"
+        path: "/tmp/openscap/{{ datetime }}_results"
         state: directory
         mode: '0755'
+
+    # - name: creating files because apparetnly they need to exist
+    #   ansible.builtin.file:
+    #     path: /tmp/openscap/{{ datetime }}_results/arf.xml
+    #     state: touch
+    #     mode: u=rw,g=wr,o=r
     
     - name: run scap role d
       ansible.builtin.include_role:
