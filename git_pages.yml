@@ -2,7 +2,7 @@
   hosts: all
   tasks:
   
-  - ansible.builtin.fetch:
+  - ansible.builtin.copy:
       src: /tmp/openscap/202402241157_results/rhel-db2.local_report.html
       dest: /tmp/
-    remote_src: yes
+      remote_src: yes
