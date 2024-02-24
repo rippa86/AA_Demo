@@ -20,7 +20,7 @@
         state: directory
         mode: '0755'
     
-    - name: create oscap results directory
+    - name: create oscap results directoryz
       ansible.builtin.file:
         path: "/tmp/open_scap/{{ datetime }}_results"
         state: directory
