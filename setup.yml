@@ -8,5 +8,5 @@
       package_name:
       - openscap-scanner
       - scap-security-guide
-    
+    become: true
     
