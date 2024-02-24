@@ -10,7 +10,7 @@
         datetime: "{{ now(utc=true,fmt='%Y%m%d%H%M') }}"
         hostname: "{{ ansible_facts['nodename'] }}"
     
-    - name: check fact
+    - name: check fact hostname
       ansible.builtin.debug:
         var: hostname
 
@@ -26,9 +26,9 @@
         state: directory
         mode: '0755'
     
-    - name: run scap role
+    - name: run scap role d
       ansible.builtin.include_role:
         name: scap
       vars: 
-        hostname: "{{ hostname }}"
+        oscap_hostname: "{{ hostname }}"
         dir_name: "{{ datetime }}"
