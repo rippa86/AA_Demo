@@ -1,8 +1,8 @@
 - name: Set up AAP Demo
-  hosts: all
+  hosts: localhost
   tasks:
   
-  - ansible.builtin.copy:
+  - ansible.builtin.fetch:
       src: /tmp/openscap/202402241157_results/rhel-db2.local_report.html
       dest: /tmp/
-      remote_src: yes
+      #remote_src: yes
