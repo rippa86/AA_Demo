@@ -4,9 +4,9 @@
   - name: install scap packages
     ansible.builtin.include_tasks: tasks/install_packages.yml
     vars:
+      dnf_state: latest
       package_name:
       - openscap-scanner
       - scap-security-guide
-      
     
     
