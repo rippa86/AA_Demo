@@ -1,5 +1,5 @@
 - name: Set up AAP Demo
-  hosts: all
+  hosts: rhelz
   tasks:
   
   - ansible.builtin.copy: 
