@@ -1,0 +1,5 @@
+---
+- src: https://github.com/rippa86/scap.git
+  scm: git
+  version: main
+  name: scap
