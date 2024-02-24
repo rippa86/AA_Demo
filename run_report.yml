@@ -1,0 +1,34 @@
+- name: Set up AAP Demo
+  hosts: all
+  tasks:
+    
+    - name: ping host
+      ansible.builtin.ping:
+    
+    - name: set up vars
+      ansible.builtin.set_fact: 
+        datetime: "{{ now(utc=true,fmt='%Y%m%d%H%M') }}"
+        hostname: "{{ ansible_facts['nodename'] }}"
+    
+    - name: check fact
+      ansible.builtin.debug:
+        var: hostname
+
+    - name: create oscap directory
+      ansible.builtin.file: 
+        path: /tmp/openscap
+        state: directory
+        mode: '0755'
+    
+    - name: create oscap results directory
+      ansible.builtin.file:
+        path: "/tmp/open_scap/{{ datetime }}_results"
+        state: directory
+        mode: '0755'
+    
+    - name: run scap role
+      ansible.builtin.include_role:
+        name: scap
+      vars: 
+        hostname: hostname
+        dir_name: datetime
