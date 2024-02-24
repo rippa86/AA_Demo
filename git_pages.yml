@@ -3,6 +3,6 @@
   tasks:
   
   - ansible.builtin.copy: 
-    scr: /tmp/openscap/202402241157_results/rhel-db2.local_report.html
-    dest: /tmp/
-    remote_src: yes
+      src: /tmp/openscap/202402241157_results/rhel-db2.local_report.html
+      dest: /tmp/
+      remote_src: yes
