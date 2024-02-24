@@ -1,9 +1,12 @@
 - name: Set up AAP Demo
   hosts: localhost
   tasks:
-    
-### to do 
-
+  - name: install scap packages
+    ansible.builtin.include_tasks: tasks/install_packages.yml
+    vars:
+      package_name:
+      - openscap-scanner
+      - scap-security-guide
       
     
     
