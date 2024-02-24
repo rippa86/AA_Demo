@@ -1,0 +1,6 @@
+{
+    "ansible.python.interpreterPath": "/opt/homebrew/bin/python3.12",
+    "ansibleServer.trace.server": "verbose",
+    "ansible.lightspeed.enabled": true,
+    "ansible.lightspeed.suggestions.enabled": true
+}

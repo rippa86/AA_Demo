@@ -30,5 +30,5 @@
       ansible.builtin.include_role:
         name: scap
       vars: 
-        hostname: hostname
-        dir_name: datetime
+        hostname: "{{ hostname }}"
+        dir_name: "{{ datetime }}"
