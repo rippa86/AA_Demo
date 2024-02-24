@@ -2,3 +2,4 @@
   ansible.builtin.dnf:
     name: "{{ package_name }}"
     state: "{{ dnf_state }}"
+  become: true
