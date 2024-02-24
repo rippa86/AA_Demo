@@ -1,0 +1,4 @@
+- name: "Install {{ package_name }}"
+  ansible.builtin.dnf:
+    name: "{{ package_name }}"
+    state: "{{ state }}"
