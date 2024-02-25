@@ -15,11 +15,11 @@
 - name: Check if failed_count is above 10
   debug:
     msg: "Failed count is above 10"
-  when: failed_count > 10
+  when: failed_count | int > 10
 
 - name: Check if high_count is before 4
   debug:
     msg: "High count is before 4"
-  when: high_count < 4
+  when: high_count | int > 3
   # - ansible.builtin.shell: >
   #     grep -oP 'progress-bar progress-bar-success" style="width: [0-9.]+%">\K[^<]+' /tmp/openscap/202402250628_results/rhel-db2.html
