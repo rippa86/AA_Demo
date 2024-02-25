@@ -9,8 +9,8 @@
 
 - name: return filez as a var
   set_fact:
-    failed_count: "{{ filez.stdout_lines[0] | regex_search('(\\d+)') | first | int }}"
-    crit_count: "{{ filez.stdout_lines[1] | regex_search('(\\d+)') | first | int }}"
+    failed_count: "{{ filez.stdout_lines[0] | regex_search('(\\d+)') | int }}"
+    crit_count: "{{ filez.stdout_lines[1] | regex_search('(\\d+)') | int }}"
 
 - name: Check if failed_count is above 10
   debug:
