@@ -19,13 +19,13 @@
 
     - name: set up date var
       ansible.builtin.set_fact:
-        date_dir: "{{ now(utc=true,fmt='%Y%-m%-d%S%') }}"
+        date_dir: "{{ now(utc=true,fmt='%Y%-m%-d%S') }}"
 
     - name: check if date folder exists
       ansible.builtin.stat:
         path: "/home/rippa/compliance_reports/{{ date_dir }}"
       register: folder_stat
-    - name: blockz baby
+    - name: update structure
       block:
       - name: create new dir
         ansible.builtin.file:
@@ -42,7 +42,7 @@
         lineinfile:
           path: /home/rippa/compliance_reports/index.html
           line: "<li><a href=\"{{ date_dir }}/{{ date_dir }}.html\">{{ date_dir }}</a></li>"
-          insertafter: "(<!--new-->)"
+          insertafter: (<!--new-->)
 
       - name: Add output directory to git
         ansible.builtin.shell: |

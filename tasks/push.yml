@@ -1,6 +1,6 @@
   - name: Clone GIT Repository
     ansible.builtin.git:
       repo: git@github.com:rippa86/compliance_reports.git
-      dest: /home/rippa/git
+      dest: /home/rippa/compliance_reports
       clone: yes
       update: yes
