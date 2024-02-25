@@ -1,5 +1,5 @@
 - name: create repo
-  hosts: localhost
+  hosts: aap
   tasks:
     - ansible.builtin.include_tasks: tasks/git_config.yml
 
