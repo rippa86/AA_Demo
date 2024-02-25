@@ -38,6 +38,10 @@
         excludes: "{{ date_dir }}.html"
       register: html_files
 
+    - name: set files list
+      ansible.builtin.set_fact:
+        html_files: "{{ html_files.files | map(attribute='path') | list }}"
+
     - name: show files
       ansible.builtin.debug:
         var: html_files
