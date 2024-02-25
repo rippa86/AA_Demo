@@ -46,6 +46,14 @@
       ansible.builtin.debug:
         var: html_files
 
+    - name: time to loop and add :)
+      include_tasks: tasks/update_report.yml
+      loop: "{{ html_files }}"
+      loop_control:
+        loop_var: html_path
+      vars:
+        html_path: "{{ html_path }}"
+
       # - name: Add output directory to git
       #   ansible.builtin.shell: |
       #     git add -A && git commit -m "AAP Job ID {{ tower_job_id }}: Automated by Ansible  " && git push --force
