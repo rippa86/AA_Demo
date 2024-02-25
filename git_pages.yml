@@ -1,5 +1,5 @@
 - name: set up pages
-  hosts: localhost
+  hosts: aap
   tasks:
     - name: Check for the existence of a folder
       ansible.builtin.stat:
