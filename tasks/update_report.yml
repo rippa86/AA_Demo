@@ -8,18 +8,25 @@
   register: filez
 
 - name: return filez as a var
-  set_fact:
+  ansible.builtin.set_fact:
     failed_count: "{{ filez.stdout_lines[0] | regex_search('\\d+') | int }}"
     crit_count: "{{ filez.stdout_lines[1] | regex_search('\\d+') | int }}"
 
 - name: Check if failed_count is above 10
-  debug:
-    msg: "Failed count is above 10"
+  ansible.builtin.debug:
+    msg: Failed count is above 10
   when: failed_count | int > 10
 
 - name: Check if high_count is before 4
-  debug:
-    msg: "High count is before 4"
+  ansible.builtin.debug:
+    msg: High count is before 4
   when: crit_count | int > 2
-  # - ansible.builtin.shell: >
-  #     grep -oP 'progress-bar progress-bar-success" style="width: [0-9.]+%">\K[^<]+' /tmp/openscap/202402250628_results/rhel-db2.html
+
+- name: find % compliant
+  ansible.builtin.shell: >
+    grep -oP 'progress-bar progress-bar-success" style="width: [0-9.]+%">\K[^<]+' /tmp/openscap/202402250628_results/rhel-db2.html
+  register: compliance
+
+- name: Check if high_count is before 4
+  ansible.builtin.debug:
+    var: compliance
