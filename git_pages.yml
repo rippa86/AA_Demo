@@ -27,7 +27,7 @@
       register: folder_stat2
 
     - name: folder doesn't exist
-    - fail:
+      fail:
         msg: problems with git
       when: not folder_stat2.stat.exists
 
