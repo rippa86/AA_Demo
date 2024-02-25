@@ -7,10 +7,16 @@
       grep -oP 'progress-bar progress-bar-danger" style="width: [0-9.]+%">\K[^<]+' {{ html_path }}
   register: filez
 
+- name: find % compliant
+  ansible.builtin.shell: >
+    grep -oP 'progress-bar progress-bar-success" style="width: [0-9.]+%">\K[^<]+' {{ html_path }}
+  register: compliance
+
 - name: return filez as a var
   ansible.builtin.set_fact:
     failed_count: "{{ filez.stdout_lines[0] | regex_search('\\d+') | int }}"
     crit_count: "{{ filez.stdout_lines[1] | regex_search('\\d+') | int }}"
+    comp_percent: "{{ {{ compliance.stdout_lines[2] | regex_replace('%', '') | float }}"
 
 - name: Check if failed_count is above 10
   ansible.builtin.debug:
@@ -22,11 +28,7 @@
     msg: High count is before 4
   when: crit_count | int > 2
 
-- name: find % compliant
-  ansible.builtin.shell: >
-    grep -oP 'progress-bar progress-bar-success" style="width: [0-9.]+%">\K[^<]+' {{ html_path }}
-  register: compliance
-
-- name: Check if high_count is before 4
+- name: non compliant?
   ansible.builtin.debug:
-    var: compliance
+    msg: Non compliant
+  when: comp_percent | float < 90
