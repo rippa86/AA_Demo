@@ -7,7 +7,7 @@
       register: folder_stat
 
     - ansible.builtin.include_tasks: tasks/push.yml
-      when: not folder_stat.stat.exists or not folder_stat.stat.isdi
+      when: not folder_stat.stat.exists
 
     - name: Clone GIT Repository
       ansible.builtin.git:
@@ -46,7 +46,7 @@
 
       - name: Add output directory to git
         ansible.builtin.shell: |
-          git add -A && git commit -m "RHAAP Job ID {{ tower_job_id }}: Automated by Ansible  " && git push --force
+          git add -A && git commit -m "AAP Job ID {{ tower_job_id }}: Automated by Ansible  " && git push --force
         args:
           chdir: /home/rippa/compliance_reports/
         ignore_errors: true
