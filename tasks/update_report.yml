@@ -16,7 +16,7 @@
   ansible.builtin.set_fact:
     failed_count: "{{ filez.stdout_lines[0] | regex_search('\\d+') | int }}"
     crit_count: "{{ filez.stdout_lines[1] | regex_search('\\d+') | int }}"
-    comp_percent: "{{ {{ compliance.stdout_lines[2] | regex_replace('%', '') | float }}"
+    comp_percent: "{{ compliance.stdout_lines[2] | regex_replace('%', '') | float }}"
 
 - name: Check if failed_count is above 10
   ansible.builtin.debug:
@@ -32,3 +32,4 @@
   ansible.builtin.debug:
     msg: Non compliant
   when: comp_percent | float < 90
+
