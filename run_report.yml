@@ -12,7 +12,7 @@
     - name: set up vars
       ansible.builtin.set_fact: 
         datetime: "{{ now(utc=true,fmt='%Y%m%d%H%M') }}"
-        hostname: "{{ ansible_facts['nodename'] }}"
+        hostname: "{{ ansible_facts['nodename'] | regex_replace('\\..*$', '') }}"
     
     - name: check fact hostname
       ansible.builtin.debug:
