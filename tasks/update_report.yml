@@ -34,7 +34,7 @@
   when: comp_percent | float < 90
 - name: Set a random 5-digit number to a variable
   set_fact:
-    rand_no: "{{ 10000 | random(start=10000, end=99999) }}"
+    rand_no: "{{ 10000 | random }}"
 
 - name: Insert a line for failure
   ansible.builtin.lineinfile:
