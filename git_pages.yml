@@ -1,12 +1,12 @@
 - name: Set up AAP Demo
-  hosts: rhel-db2.local
+  hosts: localhost
   tasks:
     - name: Check for the existence of a folder
       ansible.builtin.stat:
         path: /home/rippa/compliance_reports
       register: folder_stat
 
-    - ansible.builtin.include_tasks: tasks/push.yml
+    - ansible.builtin.include_tasks: tasks/git_push.yml
       when: not folder_stat.stat.exists
 
     - name: Clone GIT Repository

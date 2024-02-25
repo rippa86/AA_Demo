@@ -1,0 +1,12 @@
+- name: Check for the existence of a folder
+  ansible.builtin.stat:
+    path: /home/rippa/compliance_reports
+  register: folder_stat
+
+- name: Clone GIT Repository
+  ansible.builtin.git:
+    repo: git@github.com:rippa86/compliance_reports.git
+    dest: /home/rippa/compliance_reports
+    clone: no
+    update: yes
+  when: folder_stat.stat.exists
