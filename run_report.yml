@@ -1,4 +1,4 @@
-- name: Set up AAP Demo
+- name: Run Scap Report on Host
   hosts: all
   tasks:
     
