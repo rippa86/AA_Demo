@@ -48,7 +48,7 @@
 
     - name: copy results into cloned directory
       ansible.builtin.copy:
-        dest: /tmp/openscap/{{ datetime }}_results/
+        dest: /home/rippa/compliance_reports/{{ ansible_date_time.date }}/
         src: /tmp/openscap/{{ datetime }}_results/{{ item }}
         mode: preserve
         remote_src: yes
