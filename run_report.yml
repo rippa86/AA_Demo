@@ -1,7 +1,11 @@
-- name: Run Scap Report on Host
-  hosts: all
+- name: create repo
+  hosts: localhost
   tasks:
-    
+    - ansible.builtin.include_tasks: tasks/git_config.yml
+
+- name: Run Scap Report on Host
+  hosts: rhelz
+  tasks:
     - name: ping host
       ansible.builtin.ping:
     
@@ -38,3 +42,25 @@
       vars: 
         oscap_hostname: "{{ hostname }}"
         dir_name: "{{ datetime }}"
+
+    - name: clone git directory
+      ansible.builtin.include_tasks: tasks/git_clone.yml
+
+    - name: copy results into cloned directory
+      ansible.builtin.copy:
+        dest: /tmp/openscap/{{ datetime }}_results/
+        src: /tmp/openscap/{{ datetime }}_results/{{ item }}
+        mode: preserve
+      loop:
+        - "{{ hostname }}_arf.xml"
+        - "{{ hostname }}.html"
+
+    - name: Add output directory to git
+      ansible.builtin.shell: |
+        git config --global user.name "David"
+        git config --global user.email "dripani@gmail.com"
+        git add -A && git commit -m "AAP Job ID {{ tower_job_id }}: adding host {{ hostname }} " && git push --force
+      args:
+        chdir: /home/rippa/compliance_reports/
+      ignore_errors: true
+      register: output
