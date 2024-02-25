@@ -4,7 +4,7 @@
   
 - name: find damage done
   ansible.builtin.shell: >
-      grep -oP 'progress-bar progress-bar-danger" style="width: [0-9.]+%">\K[^<]+' /tmp/openscap/202402250628_results/rhel-db2.html
+      grep -oP 'progress-bar progress-bar-danger" style="width: [0-9.]+%">\K[^<]+' {{ html_path }}
   register: filez
 
 - name: return filez as a var
