@@ -19,7 +19,7 @@
 
     - name: set up date var
       ansible.builtin.set_fact:
-        date_dir: "{{ now(utc=true,fmt='%Y%-m%-d%S') }}"
+        date_dir: "{{ ansible_date_time.date }}_{{ ansible_date_time.minute }}"
 
     - name: check if date folder exists
       ansible.builtin.stat:
@@ -36,7 +36,7 @@
       - name: create new index from date
         ansible.builtin.template:
           src: template.html.j2
-          dest: "/home/rippa/compliance_reports/{{ date_dir }}/"
+          dest: "/home/rippa/compliance_reports/{{ date_dir }}/{{ date_dir }}.html"
 
       - name: Insert a line after a specific pattern
         lineinfile:
@@ -51,4 +51,7 @@
           chdir: /home/rippa/compliance_reports/
         ignore_errors: true
         register: output
+      rescue:
+      - ansible.builtin.fail:
+          msg: Ouch i stuffed up
       when: not folder_stat.stat.exists
