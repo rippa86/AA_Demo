@@ -51,6 +51,7 @@
         dest: /tmp/openscap/{{ datetime }}_results/
         src: /tmp/openscap/{{ datetime }}_results/{{ item }}
         mode: preserve
+        remote_src: yes
       loop:
         - "{{ hostname }}_arf.xml"
         - "{{ hostname }}.html"
