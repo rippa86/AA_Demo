@@ -14,7 +14,7 @@
       description: "I am the batman"
       other:
         assigned_to: "Andrew Och"
-        caller_id: ""Abel Tuter"
+        caller_id: "Abel Tuter"
     register: new_incident
 
   - name: set stats
