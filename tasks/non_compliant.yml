@@ -3,7 +3,7 @@
     oscap xccdf generate fix --profile xccdf_org.ssgproject.content_profile_e8 \
     --fetch-remote-resources {{ file_host}}_arf.xml > {{ file_host}}_fix.sh
   args:
-      chdir: /home/rippa/compliance_reports/
+      chdir: "/home/rippa/compliance_reports/{{ ansible_date_time.date }}"
   ignore_errors: true
   register: oscap_result
   become: true
