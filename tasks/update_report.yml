@@ -32,7 +32,6 @@
   ansible.builtin.debug:
     msg: Non compliant
   when: comp_percent | float < 90
-- name: Set a random 5-digit number to a variable
 
 - name: Failed Compliance check
   ansible.builtin.include_tasks: tasks/non_compliant.yml
