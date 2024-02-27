@@ -33,14 +33,9 @@
     msg: Non compliant
   when: comp_percent | float < 90
 - name: Set a random 5-digit number to a variable
-  set_fact:
-    rand_no: "{{ 10000 | random }}"
 
-- name: Insert a line for failure
-  ansible.builtin.lineinfile:
-    path: "{{ parent_report }}"
-    line: '<li><a href="{{ file_host }}.html">{{ file_host }}.local</a><span class="incident-number">IM{{ rand_no }}</span><span class="status fail">Fail</span></li>'
-    insertafter: (<!-- Inserthere -->)
+- name: Failed Compliance check
+  ansible.builtin.include_tasks: tasks/non_compliant.yml
   when: failed_count | int > 10 or crit_count | int > 2 or comp_percent | float < 90
 
 - name: Insert a line for pass :)
