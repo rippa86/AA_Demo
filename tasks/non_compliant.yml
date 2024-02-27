@@ -30,9 +30,8 @@
 
 - name: set stats
   set_fact:
-    data:
-      inc_number: "{{ new_incident.record.number }}"
-      inc_sysid: "{{ new_incident.record.sys_id }}"
+    inc_number: "{{ new_incident.record.number }}"
+    inc_sysid: "{{ new_incident.record.sys_id }}"
 
 - name: Print Message
   debug:
