@@ -7,7 +7,6 @@
   ignore_errors: true
   register: oscap_result
   become: true
-
 - name: Create Incident
   servicenow.itsm.incident:
     instance:
@@ -21,8 +20,7 @@
     description: 
       "Server in non compliant with Rippa Corp Policy for Essential 8: AAP ID: {{ tower_job_id }} \n 
       Failed: {{ failed_count}} \n Critical Warnings: {{ crit_count }} \n Compliance: {{ comp_percent }}% \n
-      https://rippa86.github.io/compliance_reports/{{ ansible_date_time.date }}/{{ file_host }} \n
-      Self Healing playbook Scheduled: "
+      https://rippa86.github.io/compliance_reports/{{ ansible_date_time.date }}/{{ file_host }}"
     other:
       assigned_to: Andrew Och
       caller_id: AAP
@@ -32,19 +30,57 @@
   set_fact:
     inc_number: "{{ new_incident.record.number }}"
     inc_sysid: "{{ new_incident.record.sys_id }}"
+## Creating Schedule 
+- name: run fact for RRULE
+  set_fact:
+    set_rrule: "{{ now(utc=true,fmt='%Y%m%dT%H%M%SZ') }}"
+
+- name: Create a new token using username/password
+  ansible.controller.schedule:
+    controller_host: "{{ aap_host }}"
+    controller_username: "{{ aap_username }}"
+    controller_password: "{{ aap_password }}"
+    name: "Self_healing {{ dir_host }}.local"
+    validate_certs: false
+    state: present
+    unified_job_template: "OSCAP Self Healing"
+    rrule: "DTSTART:{{ set_rrule }} RRULE:INTERVAL=1;COUNT=1;FREQ=MINUTELY"
+    extra_data:
+      inc_host: "{{ dir_host }}"
+  register: result
+
+- name: set fact for msg
+  setfact:
+    scheduled_job: "AAP Job Scheduled: {{ result.name }} URL to Pause or Cancel: https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}"
+
+- name: Update ServiceNow ticket to indicate start
+  servicenow.itsm.api:
+    instance:
+      host: "{{ snow_instance }}"
+      username: "{{ snow_username }}"
+      password: "{{ snow_password }}"
+
+    resource: sc_request
+    action: patch
+    sys_id: "{{ inc_sysid }}"
+    data:
+      work_notes: "AAP has rated these defects as Critical. {{ scheduled_job }}"
+  register: snow_var
 
 - name: Print Message
   debug:
     var: new_incident.record.number
 
+## updating File
 - name: Insert a line for failure
   ansible.builtin.lineinfile:
     path: "{{ parent_report }}"
     line: '<li><a href="{{ file_host }}.html">{{ file_host }}.local</a><a href="{{ snow_instance }}now/sow/record/incident/{{ inc_sysid }}"><span class="incident-number"</span>{{ inc_number }}</a><span class="status fail">Fail</span></li>'
     insertafter: (<!-- Inserthere -->)
-  
+
+# posting to slack
 - name: Post URL to Slack channel
   community.general.slack:
     token: "T0508SWKB2N/B04V8C4P6A3/fr3b7rtyxJrZgjuRqQ1UCT1d"
     channel: "#devops"
-    msg: '<{{ snow_instance }}now/sow/record/incident/{{ inc_sysid }}{{ inc_number }}|{{ inc_number }}> - Ansible has detected RHEL9 host *{{ file_host }}.local* is non compliant according to E8 Pollicy. \n Self-healing playbook has been scheduled here:  '
+    msg: '<{{ snow_instance }}now/sow/record/incident/{{ inc_sysid }}{{ inc_number }}|{{ inc_number }}> - Ansible has detected RHEL9 host *{{ file_host }}.local* is non compliant according to E8 Pollicy. \n Self-healing playbook has been scheduled here: <https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}|{{ file_host }}.local   '
