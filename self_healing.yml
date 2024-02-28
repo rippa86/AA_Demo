@@ -9,7 +9,7 @@
       dest: /home/rippa/compliance_reports
       clone: no
       update: yes
-    when: folder_stat.stat.exists
+
 
   - name: set some groovy facts
     ansible.builtin.set_fact:
