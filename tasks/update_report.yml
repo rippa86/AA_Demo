@@ -35,7 +35,7 @@
 
 - name: Failed Compliance check
   ansible.builtin.include_tasks: tasks/non_compliant.yml
-  when: failed_count | int > 10 or crit_count | int > 2 or comp_percent | float < 90
+  when: failed_count | int > 10 or crit_count | int > 2 or comp_percent | float < 90 and not re_run
 
 - name: Insert a line for pass :)
   ansible.builtin.lineinfile:
