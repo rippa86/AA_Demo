@@ -9,9 +9,9 @@
 
   - name: Create a new token using username/password
     ansible.controller.schedule:
-      controller_host: "{{ tower_host }}"
-      controller_username: "{{ tower_username }}"
-      controller_password: "{{ tower_password }}"
+      controller_host: "{{ aap_host }}"
+      controller_username: "{{ aap_username }}"
+      controller_password: "{{ aap_password }}"
       name: "Self_healing for {{ inc_host }}"
       state: present
       unified_job_template: "Snow"
