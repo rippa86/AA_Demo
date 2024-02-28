@@ -1,6 +1,21 @@
 - name: create repo
   hosts: aap
+  vars:
+    inc_host: batman
   tasks:
-  - name: Create a string for a schedule
-    ansible.builtin.debug:
-      msg: "{{ query('awx.awx.schedule_rruleset', 'none', start_date='1979-09-13 03:45:07') }}"
+  # - name: Create a string for a schedule
+  #   ansible.builtin.debug:
+  #     msg: "{{ query('awx.awx.schedule_rruleset', 'none', start_date='1979-09-13 03:45:07') }}"
+
+  - name: Create a new token using username/password
+    ansible.controller.schedule:
+      controller_host: "{{ tower_host }}"
+      controller_username: "{{ tower_username }}"
+      controller_password: "{{ tower_password }}"
+      name: "Self_healing for {{ inc_host }}"
+      state: present
+      unified_job_template: "Snow"
+      rrule: "DTSTART:20240228T060000Z DTEND:20240228T060000Z"
+      extra_data:
+        inc_host: "{{ inc_host }}"
+  register: result
