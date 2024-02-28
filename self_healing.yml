@@ -13,6 +13,7 @@
       controller_username: "{{ aap_username }}"
       controller_password: "{{ aap_password }}"
       name: "Self_healing for {{ inc_host }}"
+      controller_validate_certs: false
       state: present
       unified_job_template: "Snow"
       rrule: "DTSTART:20240228T060000Z DTEND:20240228T060000Z"
