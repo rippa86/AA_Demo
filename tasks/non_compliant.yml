@@ -27,12 +27,12 @@
   register: new_incident
 
 - name: set stats
-  set_fact:
+  ansible.builtin.set_fact:
     inc_number: "{{ new_incident.record.number }}"
     inc_sysid: "{{ new_incident.record.sys_id }}"
 ## Creating Schedule 
 - name: run fact for RRULE
-  set_fact:
+  ansible.builtin.set_fact:
     set_rrule: "{{ now(utc=true,fmt='%Y%m%dT%H%M%SZ') }}"
 
 - name: Create a new token using username/password
@@ -50,7 +50,7 @@
   register: result
 
 - name: set fact for msg
-  setfact:
+  ansible.builtin.set_fact:
     scheduled_job: "AAP Job Scheduled: {{ result.name }} URL to Pause or Cancel: https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}"
 
 - name: Update ServiceNow ticket to indicate start
