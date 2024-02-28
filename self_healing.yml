@@ -6,17 +6,19 @@
   # - name: Create a string for a schedule
   #   ansible.builtin.debug:
   #     msg: "{{ query('awx.awx.schedule_rruleset', 'none', start_date='1979-09-13 03:45:07') }}"
-
+  - name:
+    set_fact:
+      set_rrule: "{{ now(utc=true,fmt='%Y%m%dT%H%M%SZ') }}"
   - name: Create a new token using username/password
     ansible.controller.schedule:
       controller_host: "{{ aap_host }}"
       controller_username: "{{ aap_username }}"
       controller_password: "{{ aap_password }}"
-      name: "Self_healing for {{ inc_host }}"
+      name: "Self_healing {{ inc_host }}.local"
       validate_certs: false
       state: present
-      unified_job_template: "Snow"
-      rrule: "DTSTART:20240228T060000Z RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=TU"
+      unified_job_template: "OSCAP Self Healing"
+      rrule: "DTSTART:{{ set_rrule }} RRULE:INTERVAL=1;COUNT=1;FREQ=MINUTELY"
       extra_data:
         inc_host: "{{ inc_host }}"
     register: result
