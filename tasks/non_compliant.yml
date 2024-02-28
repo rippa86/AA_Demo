@@ -51,7 +51,7 @@
 
 - name: set fact for msg
   ansible.builtin.set_fact:
-    scheduled_job: "AAP Job Scheduled: {{ result.name }} URL to Pause or Cancel: https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}"
+    scheduled_job: "AAP Job Scheduled. URL to Pause or Cancel: https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}"
 
 - name: Update ServiceNow ticket to indicate start
   servicenow.itsm.api:
