@@ -10,6 +10,6 @@
       ansible.builtin.ping:
     
     - name: run the openscap report
-      ansible.builtin.include_tasks: tasks/execite_openscap.yml
+      ansible.builtin.include_tasks: tasks/execute_openscap.yml
       vars:
         re_run: false
