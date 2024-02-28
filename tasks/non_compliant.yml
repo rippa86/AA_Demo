@@ -40,13 +40,13 @@
     controller_host: "{{ aap_host }}"
     controller_username: "{{ aap_username }}"
     controller_password: "{{ aap_password }}"
-    name: "Self_healing {{ dir_host }}.local"
+    name: "Self_healing {{ file_host }}.local"
     validate_certs: false
     state: present
     unified_job_template: "OSCAP Self Healing"
     rrule: "DTSTART:{{ set_rrule }} RRULE:INTERVAL=1;COUNT=1;FREQ=MINUTELY"
     extra_data:
-      inc_host: "{{ dir_host }}"
+      inc_host: "{{ file_host }}.local"
   register: result
 
 - name: set fact for msg
