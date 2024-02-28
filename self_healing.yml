@@ -30,7 +30,7 @@
   # - name: run fix
   #   ansible.builtin.include_tasks: tasks/run_shell_fix.yml  
   - name: run the openscap report
-    ansible.builtin.include_tasks: tasks/execite_openscap.yml
+    ansible.builtin.include_tasks: tasks/execute_openscap.yml
     vars:
       re_run: true
 
@@ -39,7 +39,7 @@
     vars:
       html_path: "{{ file_path }}{{ date_dir }}/{{ file_host }}.html"
       parent_report: "/home/rippa/compliance_reports/{{ date_dir }}/{{ date_dir }}.html"
-      re_run: false
+      re_run: true
 
   - name: Close Incident
     servicenow.itsm.incident:
