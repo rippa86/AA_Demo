@@ -59,8 +59,8 @@
       host: "{{ snow_instance }}"
       username: "{{ snow_username }}"
       password: "{{ snow_password }}"
-    resource: sc_request
-    action: In Progress
+    resource: incident
+    action: patch
     sys_id: "{{ inc_sysid }}"
     data:
       work_notes: "AAP has rated these defects as Critical. {{ scheduled_job }}"

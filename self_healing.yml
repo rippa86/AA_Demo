@@ -1,30 +1,79 @@
-- name: create repo
-  hosts: aap
-  vars:
-    inc_host: batman
-  tasks:
-  # - name: Create a string for a schedule
-  #   ansible.builtin.debug:
-  #     msg: "{{ query('awx.awx.schedule_rruleset', 'none', start_date='1979-09-13 03:45:07') }}"
-  - name:
-    set_fact:
-      set_rrule: "{{ now(utc=true,fmt='%Y%m%dT%H%M%SZ') }}"
-  - name: Create a new token using username/password
-    ansible.controller.schedule:
-      controller_host: "{{ aap_host }}"
-      controller_username: "{{ aap_username }}"
-      controller_password: "{{ aap_password }}"
-      name: "Self_healing {{ dir_host }}.local"
-      validate_certs: false
-      state: present
-      unified_job_template: "OSCAP Self Healing"
-      rrule: "DTSTART:{{ set_rrule }} RRULE:INTERVAL=1;COUNT=1;FREQ=MINUTELY"
-      extra_data:
-        inc_host: "{{ inc_host }}"
-    register: result
-  
-  - name: set fact for msg
-    setfact: 
-      scheduled_job: "AAP Job Scheduled: {{ result.name }} URL to Pause or Cancel: https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}"
+- name: Perform Self Healing. 
+  hosts: "{{ inc_host }}"
 
-  
+  tasks:
+
+  # Get the host from git
+  - name: Clone GIT Repository
+  ansible.builtin.git:
+    repo: git@github.com:rippa86/compliance_reports.git
+    dest: /home/rippa/compliance_reports
+    clone: no
+    update: yes
+  when: folder_stat.stat.exists
+
+  - name: set some groovy facts
+  ansible.builtin.set_fact: 
+    file_host: "{{ inc_host | regex_replace('^.*\\/([^\\/]+)\\.html$', '\\1') }}"
+    date_dir: "{{ ansible_date_time.date }}"
+    file_path: "/home/rippa/compliance_reports/"
+
+  - name: Check for the existence of a file
+    ansible.builtin.stat:
+      path: "{{ file_path }}{{ date_dir }}/{{ file_host }}_fix.sh"
+    register: file_stat
+
+  - name: Print message if file exists
+    fail: 
+      msg: "File exists."
+    when: not file_stat.stat.exists
+
+  # - name: run fix
+  #   ansible.builtin.include_tasks: tasks/run_shell_fix.yml  
+  - name: run the openscap report
+    ansible.builtin.include_tasks: tasks/execite_openscap.yml
+    vars:
+      re_run: true
+
+  - name: time to loop and add :)
+    include_tasks: tasks/update_report.yml
+    vars:
+      html_path: "{{ file_path }}{{ date_dir }}/{{ file_host }}.html"
+      parent_report: "/home/rippa/compliance_reports/{{ date_dir }}/{{ date_dir }}.html"
+      re_run: false
+
+  - name: Close Incident
+    servicenow.itsm.incident:
+      instance:
+        host: "{{ snow_instance }}"
+        username: "{{ snow_username }}"
+        password: "{{ snow_password }}"
+      state: closed
+      close_code: "Closed/Resolved by Caller"
+      close_notes: "{{ inc_host }} is now compliant, Task completed via {{ tower_job_id }}. Work attached"
+      number: "{{ inc_number }}"
+      other:
+        work_notes: "This incident has been closed by Ansible Automation Platform {{ tower_job_id }}"
+        resolution_code: "Resolved by change"
+
+  - name: Replace "fail" with "pass"
+    ansible.builtin.replace:
+      path: "{{ file_path }}{{ date_dir }}/{{ date_dir }}.html"  # Update this path to your file's location
+      regexp: 'fail'
+      replace: 'pass'
+      ignore_case: False  # This makes the replacement case-sensitive
+
+  - name: Replace "Fail" with "Pass"
+    ansible.builtin.replace:
+      path: "{{ file_path }}{{ date_dir }}/{{ date_dir }}.html"  # Ensure this is the path to your file
+      regexp: 'Fail'
+      replace: 'Pass'
+      ignore_case: False  # This ensures the match is case-sensitive
+      
+  - name: Add output directory to git
+    ansible.builtin.shell: |
+      git add -A && git commit -m "AAP Job ID {{ tower_job_id }}: Automated by Ansible  " && git push --force
+    args:
+      chdir: /home/rippa/compliance_reports/
+    ignore_errors: true
+    register: output

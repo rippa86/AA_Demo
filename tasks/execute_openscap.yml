@@ -1,0 +1,58 @@
+- name: set up vars
+  ansible.builtin.set_fact: 
+    datetime: "{{ now(utc=true,fmt='%Y%m%d%H%M') }}"
+    hostname: "{{ ansible_facts['nodename'] | regex_replace('\\..*$', '') }}"
+
+- name: check fact hostname
+  ansible.builtin.debug:
+    var: hostname
+
+- name: create oscap directory
+  ansible.builtin.file: 
+    path: /tmp/openscap
+    state: directory
+    mode: '0755'
+
+- name: create oscap results directoryz
+  ansible.builtin.file:
+    path: "/tmp/openscap/{{ datetime }}_results"
+    state: directory
+    mode: '0755'
+
+# - name: creating files because apparetnly they need to exist
+#   ansible.builtin.file:
+#     path: /tmp/openscap/{{ datetime }}_results/arf.xml
+#     state: touch
+#     mode: u=rw,g=wr,o=r
+
+- name: run scap role d
+  ansible.builtin.include_role:
+    name: scap
+  vars: 
+    oscap_hostname: "{{ hostname }}"
+    dir_name: "{{ datetime }}"
+
+- name: clone git directory
+  ansible.builtin.include_tasks: tasks/git_clone.yml
+  when: not re_run
+
+- name: copy results into cloned directory
+  ansible.builtin.copy:
+    dest: /home/rippa/compliance_reports/{{ ansible_date_time.date }}/
+    src: /tmp/openscap/{{ datetime }}_results/{{ item }}
+    mode: preserve
+    remote_src: yes
+  loop:
+    - "{{ hostname }}_arf.xml"
+    - "{{ hostname }}.html"
+
+- name: Add output directory to git
+  ansible.builtin.shell: |
+    git config --global user.name "David"
+    git config --global user.email "dripani@gmail.com"
+    git add -A && git commit -m "AAP Job ID {{ tower_job_id }}: adding host {{ hostname }} " && git push --force
+  args:
+    chdir: /home/rippa/compliance_reports/
+  ignore_errors: true
+  register: output
+  when: not re_run
