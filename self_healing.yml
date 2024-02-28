@@ -16,7 +16,7 @@
       validate_certs: false
       state: present
       unified_job_template: "Snow"
-      rrule: "DTSTART:20240228T060000Z"
+      rrule: "DTSTART:20240228T060000Z RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=TU"
       extra_data:
         inc_host: "{{ inc_host }}"
     register: result
