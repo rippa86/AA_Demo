@@ -13,7 +13,7 @@
 
   - name: set some groovy facts
     ansible.builtin.set_fact:
-      file_host: "{{ inc_host | regex_replace('^.*\\/([^\\/]+)\\.local$', '\\1') }}"
+      file_host: "{{ inc_host | split('.') | first }}"
       date_dir: "{{ ansible_date_time.date }}"
       file_path: "/home/rippa/compliance_reports/"
 
