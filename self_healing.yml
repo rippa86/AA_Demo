@@ -18,4 +18,4 @@
       rrule: "DTSTART:20240228T060000Z DTEND:20240228T060000Z"
       extra_data:
         inc_host: "{{ inc_host }}"
-  register: result
+    register: result
