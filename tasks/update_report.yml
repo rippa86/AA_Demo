@@ -33,15 +33,17 @@
     msg: Non compliant
   when: comp_percent | float < 90
 
-- name: Failed Compliance check
-  ansible.builtin.include_tasks: tasks/non_compliant.yml
-  when: failed_count | int > 10 or crit_count | int > 2 or comp_percent | float < 90 and not re_run
+- block:
+  - name: Failed Compliance check
+    ansible.builtin.include_tasks: tasks/non_compliant.yml
+    when: failed_count | int > 10 or crit_count | int > 2 or comp_percent | float < 90
 
-- name: Insert a line for pass :)
-  ansible.builtin.lineinfile:
-    path: "{{ parent_report }}"
-    line: '<li><a href="{{ file_host }}.html">{{ file_host }}.local</a><span class="status pass">Pass</span></li>'
-    insertafter: (<!-- Inserthere -->)
-  when: failed_count | int < 10 or crit_count | int < 2 or comp_percent | float > 90 and not re_run
+  - name: Insert a line for pass :)
+    ansible.builtin.lineinfile:
+      path: "{{ parent_report }}"
+      line: '<li><a href="{{ file_host }}.html">{{ file_host }}.local</a><span class="status pass">Pass</span></li>'
+      insertafter: (<!-- Inserthere -->)
+    when: failed_count | int < 10 or crit_count | int < 2 or comp_percent | float > 90
+  when: not re_run
 
 
