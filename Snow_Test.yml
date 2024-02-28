@@ -11,7 +11,7 @@
         username: "{{ snow_username }}"
         password: "{{ snow_password }}"
       resource: incident
-      action: Patch
+      action: patch
       sys_id: "{{ inc_sysid }}"
       data:
         work_notes: "AAP has rated these defects as Critical. {{ scheduled_job }}"
