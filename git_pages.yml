@@ -54,6 +54,7 @@
       vars:
         html_path: "{{ html_path }}"
         parent_report: "/home/rippa/compliance_reports/{{ date_dir }}/{{ date_dir }}.html"
+        re_run: false
 
     - name: Add output directory to git
       ansible.builtin.shell: |

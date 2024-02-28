@@ -1,22 +1,21 @@
-- name: Perform Self Healing. 
+- name: Perform Self Healing
   hosts: "{{ inc_host }}"
-
   tasks:
 
   # Get the host from git
   - name: Clone GIT Repository
-  ansible.builtin.git:
-    repo: git@github.com:rippa86/compliance_reports.git
-    dest: /home/rippa/compliance_reports
-    clone: no
-    update: yes
-  when: folder_stat.stat.exists
+    ansible.builtin.git:
+      repo: git@github.com:rippa86/compliance_reports.git
+      dest: /home/rippa/compliance_reports
+      clone: no
+      update: yes
+    when: folder_stat.stat.exists
 
   - name: set some groovy facts
-  ansible.builtin.set_fact: 
-    file_host: "{{ inc_host | regex_replace('^.*\\/([^\\/]+)\\.html$', '\\1') }}"
-    date_dir: "{{ ansible_date_time.date }}"
-    file_path: "/home/rippa/compliance_reports/"
+    ansible.builtin.set_fact:
+      file_host: "{{ inc_host | regex_replace('^.*\\/([^\\/]+)\\.html$', '\\1') }}"
+      date_dir: "{{ ansible_date_time.date }}"
+      file_path: "/home/rippa/compliance_reports/"
 
   - name: Check for the existence of a file
     ansible.builtin.stat:
@@ -25,7 +24,7 @@
 
   - name: Print message if file exists
     fail: 
-      msg: "File exists."
+      msg: "File doesn't exist."
     when: not file_stat.stat.exists
 
   # - name: run fix
@@ -69,7 +68,7 @@
       regexp: 'Fail'
       replace: 'Pass'
       ignore_case: False  # This ensures the match is case-sensitive
-      
+
   - name: Add output directory to git
     ansible.builtin.shell: |
       git add -A && git commit -m "AAP Job ID {{ tower_job_id }}: Automated by Ansible  " && git push --force
