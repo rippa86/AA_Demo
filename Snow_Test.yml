@@ -1,27 +1,18 @@
 - name: set up pages
   hosts: aap
+  vars:
+    scheduled_job: aaaaa
+    inc_sysid: 8935604397648210d781f141f053af6c
   tasks:
-  - name: Create Incident
-    servicenow.itsm.incident:
+  - name: Update ServiceNow ticket to indicate start
+    servicenow.itsm.api:
       instance:
         host: "{{ snow_instance }}"
         username: "{{ snow_username }}"
         password: "{{ snow_password }}"
-      state: new
-      short_description: "Hi Brian"
-      urgency: "3"
-      impact: "2"
-      description: "I am the batman"
-      other:
-        assigned_to: "Andrew Och"
-        caller_id: "Abel Tuter"
-    register: new_incident
-
-  - name: set stats
-    set_stats:
+      resource: incident
+      action: Patch
+      sys_id: "{{ inc_sysid }}"
       data:
-        inc_number: "{{ new_incident.record.number }}"
-
-  - name: Print Message
-    debug:
-      var: new_incident.record.number
+        work_notes: "AAP has rated these defects as Critical. {{ scheduled_job }}"
+    register: snow_var
