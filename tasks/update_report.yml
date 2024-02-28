@@ -42,5 +42,6 @@
     path: "{{ parent_report }}"
     line: '<li><a href="{{ file_host }}.html">{{ file_host }}.local</a><span class="status pass">Pass</span></li>'
     insertafter: (<!-- Inserthere -->)
-  when: failed_count | int < 10 or crit_count | int < 2 or comp_percent | float > 90
+  when: failed_count | int < 10 or crit_count | int < 2 or comp_percent | float > 90 and not re_run
+
 
