@@ -20,12 +20,12 @@
     impact: 2
     description: 
       "Server in non compliant with Rippa Corp Policy for Essential 8: AAP ID: {{ tower_job_id }} \n 
-      Failed: {{ failed_count}} \n Critical Warning {{ crit_count }} Compliance: {{ comp_percent }}% \n
+      Failed: {{ failed_count}} \n Critical Warnings: {{ crit_count }} \n Compliance: {{ comp_percent }}% \n
       https://rippa86.github.io/compliance_reports/{{ ansible_date_time.date }}/{{ file_host }} \n
       Self Healing playbook Scheduled: "
     other:
-      assigned_to: "Andrew Och"
-      caller_id: "AAP"
+      assigned_to: Andrew Och
+      caller_id: AAP
   register: new_incident
 
 - name: set stats
@@ -40,6 +40,11 @@
 - name: Insert a line for failure
   ansible.builtin.lineinfile:
     path: "{{ parent_report }}"
-    line: '<li><a href="{{ file_host }}.html">{{ file_host }}.local</a><a href="{{ snow_instance }}/now/sow/record/incident/{{ inc_sysid }}"><span class="incident-number"</span>{{ inc_number }}</a><span class="status fail">Fail</span></li>'
+    line: '<li><a href="{{ file_host }}.html">{{ file_host }}.local</a><a href="{{ snow_instance }}now/sow/record/incident/{{ inc_sysid }}"><span class="incident-number"</span>{{ inc_number }}</a><span class="status fail">Fail</span></li>'
     insertafter: (<!-- Inserthere -->)
   
+- name: Post URL to Slack channel
+  community.general.slack:
+    token: "T0508SWKB2N/B04V8C4P6A3/fr3b7rtyxJrZgjuRqQ1UCT1d"
+    channel: "#devops"
+    msg: '<{{ snow_instance }}now/sow/record/incident/{{ inc_sysid }}{{ inc_number }}|{{ inc_number }}> - Ansible has detected a non compliant host according to E8 Pollicy.'
