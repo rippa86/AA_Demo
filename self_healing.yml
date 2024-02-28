@@ -14,7 +14,7 @@
       controller_host: "{{ aap_host }}"
       controller_username: "{{ aap_username }}"
       controller_password: "{{ aap_password }}"
-      name: "Self_healing {{ inc_host }}.local"
+      name: "Self_healing {{ dir_host }}.local"
       validate_certs: false
       state: present
       unified_job_template: "OSCAP Self Healing"
@@ -22,3 +22,9 @@
       extra_data:
         inc_host: "{{ inc_host }}"
     register: result
+  
+  - name: set fact for msg
+    setfact: 
+      scheduled_job: "AAP Job Scheduled: {{ result.name }} URL to Pause or Cancel: https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}"
+
+  
