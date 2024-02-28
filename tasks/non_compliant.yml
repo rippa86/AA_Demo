@@ -59,7 +59,7 @@
       host: "{{ snow_instance }}"
       username: "{{ snow_username }}"
       password: "{{ snow_password }}"
-    #resource: sc_request
+    resource: sc_request
     action: In Progress
     sys_id: "{{ inc_sysid }}"
     data:
