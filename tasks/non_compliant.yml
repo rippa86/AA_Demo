@@ -47,6 +47,8 @@
     rrule: "DTSTART:{{ set_rrule }} RRULE:INTERVAL=1;COUNT=1;FREQ=MINUTELY"
     extra_data:
       inc_host: "{{ file_host }}.local"
+      inc_sysid: "{{ inc_sysid }}"
+      inc_number: "{{ inc_number }}"
   register: result
 
 - name: set fact for msg

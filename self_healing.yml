@@ -33,8 +33,8 @@
       msg: "File doesn't exist."
     when: not file_stat.stat.exists
 
-  # - name: run fix
-  #   ansible.builtin.include_tasks: tasks/run_shell_fix.yml  
+  - name: run fix
+    ansible.builtin.include_tasks: tasks/run_shell_fix.yml  
   - name: run the openscap report
     ansible.builtin.include_tasks: tasks/execute_openscap.yml
     vars:
@@ -47,20 +47,35 @@
       parent_report: "/home/rippa/compliance_reports/{{ date_dir }}/{{ date_dir }}.html"
       re_run: true
 
-  - name: Close Incident
-    servicenow.itsm.incident:
+
+  - name: Update ServiceNow ticket to close
+    servicenow.itsm.api:
       instance:
         host: "{{ snow_instance }}"
         username: "{{ snow_username }}"
         password: "{{ snow_password }}"
-      state: closed
-      number: "{{ inc_number }}"
-      close_code: "Closed/Resolved by Caller"
-      close_notes: "Host is now compliant Task completed via job ID {{ tower_job_id }} Work attached"
-      #resolution_code: "Resolved by change"
-      other:
-        work_notes: "This incident has been closed by Ansible Automation Platform Job ID {{ tower_job_id }}"
-        resolution_code: "Resolved by change"
+      resource: incident
+      action: patch
+      sys_id: "{{ inc_sysid }}"
+      data:
+        work_notes: "AAP has closed this bad boy"
+        close_code: Resolved by caller
+        close_notes: resolved by ansible
+        incident_state: 7
+    register: snow_var
+    # servicenow.itsm.incident:
+    #   instance:
+    #     host: "{{ snow_instance }}"
+    #     username: "{{ snow_username }}"
+    #     password: "{{ snow_password }}"
+    #   state: closed
+    #   number: "{{ inc_number }}"
+    #   close_code: "Closed/Resolved by Caller"
+    #   close_notes: "Host is now compliant Task completed via job ID {{ tower_job_id }} Work attached"
+    #   #resolution_code: "Resolved by change"
+    #   other:
+    #     work_notes: "This incident has been closed by Ansible Automation Platform Job ID {{ tower_job_id }}"
+    #     resolution_code: "Resolved by change"
         
         
 
