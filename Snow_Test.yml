@@ -11,13 +11,10 @@
         username: "{{ snow_username }}"
         password: "{{ snow_password }}"
       state: closed
-      # requested_by: some.user
-      close_code: "Closed/Resolved by Caller"
-      close_notes: "{{ close_notes }}"
-      # assignment_group: "Software"
-      #resolution_code: "Resolved by change"
       number: "{{ inc_number }}"
+      close_code: "Closed/Resolved by Caller"
+      close_notes: "{{ inc_host }} is now compliant, Task completed via {{ tower_job_id }}. Work attached"
+      #resolution_code: "Resolved by change"
       other:
-        work_notes: "This incident has been closed by Ansible Automation Platform"
-        resolution_code: "Resolved by caller"
-        #resolution_code: "Resolved by change"
+        work_notes: "This incident has been closed by Ansible Automation Platform Job {{ tower_job_id }}"
+        resolution_code: "Resolved by change"
