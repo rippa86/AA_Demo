@@ -34,7 +34,9 @@
     when: not file_stat.stat.exists
 
   - name: run fix
-    ansible.builtin.include_tasks: tasks/run_shell_fix.yml  
+    ansible.builtin.include_tasks: tasks/run_shell_fix.yml
+    vars:
+      dir_host: "{{ file_host }}"
   - name: run the openscap report
     ansible.builtin.include_tasks: tasks/execute_openscap.yml
     vars:
