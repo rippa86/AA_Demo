@@ -1,6 +1,6 @@
 - name: find the file in question 
   ansible.builtin.file:
-    path: "{{ file_path }}{{ date_dir }}/{{ dir_host}}_fix.sh" 
+    path: "/home/rippa/compliance_reports/{{ date_dir }}/{{ dir_host}}_fix.sh" 
     mode: '0755'
   become: true
 
