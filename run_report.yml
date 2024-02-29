@@ -1,11 +1,11 @@
 - name: create repo
   hosts: aap
-  become: yes
   tasks:
     - ansible.builtin.include_tasks: tasks/git_config.yml
 
 - name: Run Scap Report on Host
   hosts: rhelz
+  become: yes
   tasks:
     - name: ping host
       ansible.builtin.ping:
