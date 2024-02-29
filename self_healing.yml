@@ -7,7 +7,7 @@
     ansible.builtin.git:
       repo: git@github.com:rippa86/compliance_reports.git
       dest: /home/rippa/compliance_reports
-      clone: yes
+      clone: no
       update: yes
 
 
