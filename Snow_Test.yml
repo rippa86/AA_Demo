@@ -17,7 +17,7 @@
         work_notes: "AAP has closed this bad boy"
         close_code: Resolved by caller
         close_notes: resolved by ansible
-        stat: 7
+        incident_state: 7
     register: snow_var
 
 
