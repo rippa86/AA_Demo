@@ -5,17 +5,17 @@
     inc_sysid: 8935604397648210d781f141f053af6c
   tasks:
   - name: Close Incident
-      servicenow.itsm.incident:
-        instance:
-          host: "{{ snow_instance }}"
-          username: "{{ snow_username }}"
-          password: "{{ snow_password }}"
-        state: closed
-        # requested_by: some.user
-        close_code: "Closed/Resolved by Caller"
-        close_notes: "{{ close_notes }}"
-        # assignment_group: "Software"
-        number: "{{ inc_number }}"
-        other:
-          work_notes: "This incident has been closed by Ansible Automation Platform"
-          resolution_code: "Resolved by change"
+    servicenow.itsm.incident:
+      instance:
+        host: "{{ snow_instance }}"
+        username: "{{ snow_username }}"
+        password: "{{ snow_password }}"
+      state: closed
+      # requested_by: some.user
+      close_code: "Closed/Resolved by Caller"
+      close_notes: "{{ close_notes }}"
+      # assignment_group: "Software"
+      number: "{{ inc_number }}"
+      other:
+        work_notes: "This incident has been closed by Ansible Automation Platform"
+        resolution_code: "Resolved by change"
