@@ -14,7 +14,7 @@
       number: "{{ inc_number }}"
       close_code: "Closed/Resolved by Caller"
       close_notes: "{{ inc_host }} is now compliant, Task completed via {{ tower_job_id }}. Work attached"
-      resolution_code: "Resolved by change"
+      #resolution_code: "Resolved by change"
       other:
         work_notes: "This incident has been closed by Ansible Automation Platform {{ tower_job_id }}"
-        #resolution_code: "Resolved by change"
+        resolution_code: "Resolved by change"
