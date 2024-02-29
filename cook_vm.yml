@@ -1,0 +1,29 @@
+---
+- name: Security Demo Configuration
+  hosts: rhel-db2.local
+  become: yes
+
+  tasks:
+    - name: Disable firewalld service
+      ansible.builtin.systemd:
+        name: firewalld
+        state: stopped
+        enabled: no
+
+    - name: Set SELinux to permissive mode
+      ansible.builtin.selinux:
+        policy: targeted
+        state: permissive
+
+    - name: Disable rsyslog service
+      ansible.builtin.systemd:
+        name: rsyslog
+        state: stopped
+        enabled: no
+
+    - name: Enable IP Multicast
+      ansible.builtin.sysctl:
+        name: net.ipv4.icmp_echo_ignore_broadcasts
+        value: 0
+        state: present
+        reload: yes
