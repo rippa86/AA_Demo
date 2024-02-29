@@ -37,6 +37,8 @@
     ansible.builtin.include_tasks: tasks/run_shell_fix.yml
     vars:
       dir_host: "{{ file_host }}"
+      file_path: "{{ file_path }}"
+      date_dir: "{{ date_dir }}"
   - name: run the openscap report
     ansible.builtin.include_tasks: tasks/execute_openscap.yml
     vars:
