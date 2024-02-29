@@ -45,7 +45,7 @@
 
   - name: Run the shell script
     ansible.builtin.shell:
-      cmd: ./{{ dir_host}}_fix.sh
+      cmd: ./{{ file_host }}_fix.sh
       chdir: "{{ file_path }}{{ date_dir }}/"  
     ignore_errors: true
     become: true
@@ -104,14 +104,14 @@
       path: "{{ file_path }}{{ date_dir }}/{{ date_dir }}.html"  # Update this path to your file's location
       regexp: 'fail'
       replace: 'pass'
-      ignore_case: False  # This makes the replacement case-sensitive
+      #ignore_case: False  # This makes the replacement case-sensitive
 
   - name: Replace "Fail" with "Pass"
     ansible.builtin.replace:
       path: "{{ file_path }}{{ date_dir }}/{{ date_dir }}.html"  # Ensure this is the path to your file
       regexp: 'Fail'
       replace: 'Pass'
-      ignore_case: False  # This ensures the match is case-sensitive
+      #ignore_case: False  # This ensures the match is case-sensitive
 
   - name: Add output directory to git
     ansible.builtin.shell: |
