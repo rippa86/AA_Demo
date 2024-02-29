@@ -1,14 +1,19 @@
 - name: Perform Self Healing
   hosts: "{{ inc_host }}"
   tasks:
-
+  - name: Remove the specified directory and all its contents
+    ansible.builtin.file:
+      path: /home/rippa/compliance_reports  # Replace with the path to the directory you want to remove
+      state: absent
+    ignore_erros: yes
   # Get the host from git
   - name: Clone GIT Repository
     ansible.builtin.git:
       repo: git@github.com:rippa86/compliance_reports.git
       dest: /home/rippa/compliance_reports
-      clone: no
+      clone: yes
       update: yes
+      force: yes
 
 
   - name: set some groovy facts
