@@ -1,6 +1,6 @@
 ---
 collections:
   - name: servicenow.itsm
-  # - name: community.general
+  - name: community.general
   # - name: awx.awx
 #  - name: ansible.controller
