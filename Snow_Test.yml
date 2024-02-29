@@ -4,19 +4,37 @@
     scheduled_job: aaaaa
     inc_sysid: 8935604397648210d781f141f053af6c
   tasks:
-  - name: Close Incident
-    servicenow.itsm.incident:
+  - name: Update ServiceNow ticket to indicate start
+    servicenow.itsm.api:
       instance:
         host: "{{ snow_instance }}"
         username: "{{ snow_username }}"
         password: "{{ snow_password }}"
+      resource: incident
+      action: patch
+      sys_id: "f2863d9797acc210d781f141f053af7c"
+      data:
+        work_notes: "AAP has closed this bad boy"
+        close_code: Resolved by caller
+        close_notes: resolved by ansible
+        stat: 7
+    register: snow_var
 
-      state: closed
-      # requested_by: some.user
-      close_code: "Closed/Resolved by Caller"
-      close_notes: "{{ close_notes }}"
-      # assignment_group: "Software"
-      number: "{{ inc_number }}"
-      other:
-        work_notes: "This incident has been closed by Ansible Automation Platform"
-        resolution_code: "Resolved by change"
+
+  # What a shit module
+  # - name: Close Incident
+  #   servicenow.itsm.incident:
+  #     instance:
+  #       host: "{{ snow_instance }}"
+  #       username: "{{ snow_username }}"
+  #       password: "{{ snow_password }}"
+
+  #     state: closed
+  #     # requested_by: some.user
+  #     close_code: "Closed/Resolved by Caller"
+  #     close_notes: "{{ close_notes }}"
+  #     # assignment_group: "Software"
+  #     number: "{{ inc_number }}"
+  #     other:
+  #       work_notes: "This incident has been closed by Ansible Automation Platform"
+  #       resolution_code: "Resolved by change"
