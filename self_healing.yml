@@ -33,11 +33,28 @@
       msg: "File doesn't exist."
     when: not file_stat.stat.exists
 
-  - name: run fix
-    ansible.builtin.include_tasks: tasks/run_shell_fix.yml
-    vars:
-      dir_host: "{{ file_host }}"
-      date_dir: "{{ date_dir }}"
+  # - name: run fix
+  #   ansible.builtin.include_tasks: tasks/run_shell_fix.yml
+  #   vars:
+  #     dir_host: "{{ file_host }}"
+  - name: find the file in question 
+  ansible.builtin.file:
+    path: "{{ file_path }}{{ date_dir }}/{{ file_host }}_fix.sh" 
+    mode: '0755'
+  become: true
+
+- name: Run the shell script
+  ansible.builtin.shell:
+    cmd: ./{{ dir_host}}_fix.sh
+    chdir: "{{ file_path }}{{ date_dir }}/"  
+  ignore_errors: true
+  become: true
+  register: shell_results
+
+- name: show results
+  ansible.builtin.debug:
+    var: shell_results
+
   - name: run the openscap report
     ansible.builtin.include_tasks: tasks/execute_openscap.yml
     vars:
