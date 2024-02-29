@@ -1,5 +1,6 @@
 - name: Perform Self Healing
   hosts: "{{ inc_host }}"
+  become: yes
   tasks:
 
   - name: Remove the specified directory and all its contents
