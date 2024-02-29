@@ -4,15 +4,17 @@
     scheduled_job: aaaaa
     inc_sysid: 8935604397648210d781f141f053af6c
   tasks:
-  - name: Update ServiceNow ticket to indicate start
-    servicenow.itsm.api:
+  - name: Close Incident
+    servicenow.itsm.incident:
       instance:
         host: "{{ snow_instance }}"
         username: "{{ snow_username }}"
         password: "{{ snow_password }}"
-      resource: incident
-      action: patch
-      sys_id: "{{ inc_sysid }}"
-      data:
-        work_notes: "AAP has rated these defects as Critical. {{ scheduled_job }}"
-    register: snow_var
+      state: closed
+      number: "{{ inc_number }}"
+      close_code: "Closed/Resolved by Caller"
+      close_notes: "{{ inc_host }} is now compliant, Task completed via {{ tower_job_id }}. Work attached"
+      resolution_code: "Resolved by change"
+      other:
+        work_notes: "This incident has been closed by Ansible Automation Platform {{ tower_job_id }}"
+        resolution_code: "Resolved by change"
