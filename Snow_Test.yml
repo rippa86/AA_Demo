@@ -15,7 +15,8 @@
       close_code: "Closed/Resolved by Caller"
       close_notes: "{{ close_notes }}"
       # assignment_group: "Software"
+      resolution_code: "Resolved by change"
       number: "{{ inc_number }}"
       other:
         work_notes: "This incident has been closed by Ansible Automation Platform"
-        resolution_code: "Resolved by change"
+        #resolution_code: "Resolved by change"
