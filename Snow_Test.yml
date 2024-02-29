@@ -17,4 +17,4 @@
       #resolution_code: "Resolved by change"
       other:
         work_notes: "This incident has been closed by Ansible Automation Platform Job ID {{ tower_job_id }}"
-        resolution_code: "Resolved by change"
+        resolution_code: "Resolved by caller"
