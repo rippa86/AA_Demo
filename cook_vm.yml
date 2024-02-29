@@ -1,6 +1,6 @@
 ---
 - name: Security Demo Configuration
-  hosts: rhel-db2.local
+  hosts: "{{ cooked_host }}"
   become: yes
 
   tasks:
