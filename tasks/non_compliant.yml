@@ -80,8 +80,8 @@
     insertafter: (<!-- Inserthere -->)
 
 # posting to slack
-# - name: Post URL to Slack channel
-#   community.general.slack:
-#     token: "T0508SWKB2N/B04V8C4P6A3/fr3b7rtyxJrZgjuRqQ1UCT1d"
-#     channel: "#devops"
-#     msg: '<{{ snow_instance }}now/sow/record/incident/{{ inc_sysid }}{{ inc_number }}|{{ inc_number }}> - Ansible has detected RHEL9 host *{{ file_host }}.local* is non compliant according to E8 Pollicy. \n Self-healing playbook has been scheduled here: <https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}|AAP Scheduled Task  '
+- name: Post URL to Slack channel
+  community.general.slack:
+    token: "T0508SWKB2N/B04V8C4P6A3/fr3b7rtyxJrZgjuRqQ1UCT1d"
+    channel: "#devops"
+    msg: '<{{ snow_instance }}now/sow/record/incident/{{ inc_sysid }}{{ inc_number }}|{{ inc_number }}> - Ansible has detected RHEL9 host *{{ file_host }}.local* is non compliant according to E8 Pollicy. \n Self-healing playbook has been scheduled here: <https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}|AAP Scheduled Task  '
