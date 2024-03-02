@@ -11,9 +11,11 @@
   #     path: /Users/dripani/server3.html
   #     hostname: rhel-db2
   #   register: result
+  - set_fact: 
+      ahost: "{{ ansible_facts.ansible_hostname }}"
   - name: Fetch file to local machine
     fetch:
-      src: "/tmp/openscap/202403020455_results/*.html"
+      src: "/tmp/openscap/202403020455_results/{{ ahost }}.html"
       dest: /tmp/
       flat: yes
     delegate_to: rhel-aap.local
