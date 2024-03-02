@@ -2,6 +2,7 @@
   ansible.builtin.set_fact: 
     datetime: "{{ now(utc=true,fmt='%Y%m%d%H%M') }}"
     hostname: "{{ ansible_facts['nodename'] | regex_replace('\\..*$', '') }}"
+    output: "none"
 
 - name: check fact hostname
   ansible.builtin.debug:
@@ -65,7 +66,11 @@
       "nothing to commit, working tree clean" not in output.stdout) or
       (output.stderr != ""))
     when: not re_run
-
+    
+    ansible.builtin.fail:
+    when: 
+      - "error" in output.msg
+      - not re_run
   rescue:
   - name: fetch and rebase
     ansible.builtin.shell: |
