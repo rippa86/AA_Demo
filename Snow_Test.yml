@@ -18,7 +18,7 @@
       src: "/tmp/openscap/202403020455_results/{{ ahost }}.html"
       dest: /tmp/
       flat: yes
-    delegate_to: rhel-aap.local
+    #delegate_to: rhel-aap.local
 
 # - name: Copy file to the destination server
 #   hosts: destination_server
