@@ -19,14 +19,19 @@
       dest: /tmp/
       flat: yes
     #delegate_to: rhel-aap.local
-
-# - name: Copy file to the destination server
-#   hosts: destination_server
-#   tasks:
-#     - name: Copy file from local machine to destination
-#       copy:
-#         src: "/local/path/for/temp/storage/file.txt"
-#         dest: /path/on/destination/server/
+  - name: Find .html files
+    ansible.builtin.find:
+      paths: /tmp/
+      patterns: '*.html'
+    register: found_files
+    delegate_to: localhost
+  - name: Copy file from local machine to destination
+    copy:
+      src: "{{ item.path }}"
+      dest: /tmp/
+    loop: "{{ found_files.files }}"
+    
+    delegate_to: rhel-aap.local
 
   - debug:
       var: result
