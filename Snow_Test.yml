@@ -1,15 +1,29 @@
 - name: set up pages
-  hosts: localhost
+  hosts: all
   vars:
     scheduled_job: aaaaa
     inc_sysid: 8935604397648210d781f141f053af6c
     hostname: rhel-db2
   tasks:
-  - name: Replace Pass with Fail for lines containing hostname.local
-    update_result:
-      path: /Users/dripani/server3.html
-      hostname: rhel-db2
-    register: result
+  # - name: Replace Pass with Fail for lines containing hostname.local
+  #   update_result:
+  #     path: /Users/dripani/server3.html
+  #     hostname: rhel-db2
+  #   register: result
+  - name: Fetch file to local machine
+    fetch:
+      src: /tmp/openscap/202403020455_results/
+      dest: /tmp
+      flat: yes
+    delegate_to: aap
+
+# - name: Copy file to the destination server
+#   hosts: destination_server
+#   tasks:
+#     - name: Copy file from local machine to destination
+#       copy:
+#         src: "/local/path/for/temp/storage/file.txt"
+#         dest: /path/on/destination/server/
 
   - debug:
       var: result
