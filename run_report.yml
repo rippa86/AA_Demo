@@ -1,7 +1,7 @@
 - name: create repo
   hosts: aap
   tasks:
-    - ansible.builtin.include_tasks: tasks/git_config.yml
+    - ansible.builtin.include_tasks: tasks/set_up_httpd.yml
 
 - name: Run Scap Report on Host
   hosts: rhelz
