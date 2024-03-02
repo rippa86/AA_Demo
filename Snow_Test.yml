@@ -13,7 +13,7 @@
   #   register: result
   - name: Fetch file to local machine
     fetch:
-      src: "/tmp/openscap/202403020455_results/{{ ansible_facts.ansible_hostname }}.html"
+      src: "/tmp/openscap/202403020455_results/{{ ansible_facts['ansible_hostname'] }}.html"
       dest: /tmp/
       flat: yes
     delegate_to: rhel-aap.local
