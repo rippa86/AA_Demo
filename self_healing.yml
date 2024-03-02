@@ -3,35 +3,44 @@
   become: yes
   tasks:
 
-  - name: Remove the specified directory and all its contents
-    ansible.builtin.file:
-      path: /home/rippa/compliance_reports  # Replace with the path to the directory you want to remove
-      state: absent
-    ignore_errors: yes
+  # - name: Remove the specified directory and all its contents
+  #   ansible.builtin.file:
+  #     path: /home/rippa/compliance_reports  # Replace with the path to the directory you want to remove
+  #     state: absent
+  #   ignore_errors: yes
 
-  # Get the host from git
-  - name: Clone GIT Repository
-    ansible.builtin.git:
-      repo: git@github.com:rippa86/compliance_reports.git
-      dest: /home/rippa/compliance_reports
-      clone: yes
-      update: yes
-
+  # # Get the host from git
+  # - name: Clone GIT Repository
+  #   ansible.builtin.git:
+  #     repo: git@github.com:rippa86/compliance_reports.git
+  #     dest: /home/rippa/compliance_reports
+  #     clone: yes
+  #     update: yes
 
   - name: set some groovy facts
     ansible.builtin.set_fact:
       file_host: "{{ inc_host | split('.') | first }}"
       date_dir: "{{ ansible_date_time.date }}"
-      file_path: "/home/rippa/compliance_reports/"
+      #file_path: "/tmp/openscap/{{ date_dir }}_results/"
+
+  - name: set fact for dir
+    ansible.builtin.set_fact:
+      file_path: "/tmp/openscap/{{ date_dir }}_results/"
+
+  - name: Download a file using wget
+    ansible.builtin.shell:
+      cmd: "wget -O {{ file_path }}/{{ file_host }}_fix.sh http://192.168.64.11:80/{{ date_dir }}/{{ file_host }}_fix.sh"
+    args:
+      creates: "{{ file_path }}/{{ file_host }}_fix.sh"
 
   - name: Check for the existence of a file
     ansible.builtin.stat:
-      path: "{{ file_path }}{{ date_dir }}/{{ file_host }}_fix.sh"
+      path: "{{ file_path }}/{{ file_host }}_fix.sh"
     register: file_stat
 
   - name: Print message if file exists
     fail: 
-      msg: "File doesn't exist."
+      msg: File doesn't exist.
     when: not file_stat.stat.exists
 
   # - name: run fix
@@ -40,14 +49,14 @@
   #     dir_host: "{{ file_host }}"
   - name: find the file in question 
     ansible.builtin.file:
-      path: "{{ file_path }}{{ date_dir }}/{{ file_host }}_fix.sh" 
+      path: "{{ file_path }}/{{ file_host }}_fix.sh"
       mode: '0755'
     become: true
 
   - name: Run the shell script
     ansible.builtin.shell:
       cmd: ./{{ file_host }}_fix.sh
-      chdir: "{{ file_path }}{{ date_dir }}/"  
+      chdir: "{{ file_path }}/"
     ignore_errors: true
     become: true
     register: shell_results
@@ -61,13 +70,12 @@
     vars:
       re_run: true
 
-  - name: time to loop and add :)
-    include_tasks: tasks/update_report.yml
-    vars:
-      html_path: "{{ file_path }}{{ date_dir }}/{{ file_host }}.html"
-      parent_report: "/home/rippa/compliance_reports/{{ date_dir }}/{{ date_dir }}.html"
-      re_run: true
-
+  # - name: time to loop and add :)
+  #   include_tasks: tasks/update_report.yml
+  #   vars:
+  #     html_path: "{{ file_path }}{{ date_dir }}/{{ file_host }}.html"
+  #     parent_report: "/home/rippa/compliance_reports/{{ date_dir }}/{{ date_dir }}.html"
+  #     re_run: true
 
   - name: Update ServiceNow ticket to close
     servicenow.itsm.api:
@@ -79,36 +87,21 @@
       action: patch
       sys_id: "{{ inc_sysid }}"
       data:
-        work_notes: "AAP has closed this bad boy"
+        work_notes: AAP has closed this bad boy
         close_code: Resolved by caller
         close_notes: resolved by ansible
         incident_state: 7
     register: snow_var
-    # servicenow.itsm.incident:
-    #   instance:
-    #     host: "{{ snow_instance }}"
-    #     username: "{{ snow_username }}"
-    #     password: "{{ snow_password }}"
-    #   state: closed
-    #   number: "{{ inc_number }}"
-    #   close_code: "Closed/Resolved by Caller"
-    #   close_notes: "Host is now compliant Task completed via job ID {{ tower_job_id }} Work attached"
-    #   #resolution_code: "Resolved by change"
-    #   other:
-    #     work_notes: "This incident has been closed by Ansible Automation Platform Job ID {{ tower_job_id }}"
-    #     resolution_code: "Resolved by change"
-        
-        
 
   - name: Replace "fail" with "pass"
     update_result:
       path: "{{ file_path }}{{ date_dir }}/{{ date_dir }}.html"
       hostname: "{{ dir_host }}"
 
-  - name: Add output directory to git
-    ansible.builtin.shell: |
-      git add -A && git commit -m "AAP Job ID {{ tower_job_id }}: Automated by Ansible  " && git push --force
-    args:
-      chdir: /home/rippa/compliance_reports/
-    ignore_errors: true
-    register: output
+  # - name: Add output directory to git
+  #   ansible.builtin.shell: |
+  #     git add -A && git commit -m "AAP Job ID {{ tower_job_id }}: Automated by Ansible  " && git push --force
+  #   args:
+  #     chdir: /home/rippa/compliance_reports/
+  #   ignore_errors: true
+  #   register: output
