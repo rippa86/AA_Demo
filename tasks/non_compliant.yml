@@ -1,12 +1,22 @@
-- name: Generate Fix
-  ansible.builtin.shell:
-    oscap xccdf generate fix --profile xccdf_org.ssgproject.content_profile_e8 \
-    --fetch-remote-resources {{ file_host}}_arf.xml > {{ file_host}}_fix.sh
-  args:
-      chdir: "/home/rippa/compliance_reports/{{ ansible_date_time.date }}"
-  ignore_errors: true
-  register: oscap_result
-  become: true
+# - name: Generate Fix
+#   ansible.builtin.shell:
+#     oscap xccdf generate fix --profile xccdf_org.ssgproject.content_profile_e8 \
+#     --fetch-remote-resources {{ file_host}}_arf.xml > {{ file_host}}_fix.sh
+#   args:
+#       chdir: "/home/rippa/compliance_reports/{{ ansible_date_time.date }}"
+#   ignore_errors: true
+#   register: oscap_result
+#   become: true
+
+- name: run scap role d
+  ansible.builtin.include_role:
+    name: scap
+  vars:
+    oscap_hostname: "{{ file_host }}"
+    dir_name: "{{ datetime }}"
+    report: false
+    change_dir: "{{ directory_path }}/{{ date_dir }}"
+
 - name: Create Incident
   servicenow.itsm.incident:
     instance:
@@ -43,7 +53,7 @@
     name: "Self_healing {{ file_host }}.local"
     validate_certs: false
     state: present
-    unified_job_template: "OSCAP Self Healing"
+    unified_job_template: OSCAP Self Healing
     rrule: "DTSTART:{{ set_rrule }} RRULE:INTERVAL=1;COUNT=1;FREQ=MINUTELY"
     extra_data:
       inc_host: "{{ file_host }}.local"
@@ -82,6 +92,6 @@
 # posting to slack
 - name: Post URL to Slack channel
   community.general.slack:
-    token: "T0508SWKB2N/B04V8C4P6A3/fr3b7rtyxJrZgjuRqQ1UCT1d"
+    token: T0508SWKB2N/B04V8C4P6A3/fr3b7rtyxJrZgjuRqQ1UCT1d
     channel: "#devops"
     msg: '<{{ snow_instance }}now/sow/record/incident/{{ inc_sysid }}{{ inc_number }}|{{ inc_number }}> - Ansible has detected RHEL9 host *{{ file_host }}.local* is non compliant according to E8 Pollicy. \n Self-healing playbook has been scheduled here: <https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}|AAP Scheduled Task  '

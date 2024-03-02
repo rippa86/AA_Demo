@@ -1,0 +1,32 @@
+- name: set up my facts
+  ansible.builtin.set_fact:
+    date_dir: "{{ ansible_date_time.date }}"
+    directory_path: /var/www/html
+
+- name: Check for the existence of a folder
+  ansible.builtin.stat:
+    path: "{{ directory_path }}"
+  register: folder_stat
+
+- name: check if date folder exists
+  ansible.builtin.stat:
+    path: "{{ directory_path }}/{{ date_dir }}"
+  register: folder_stat
+- name: update structure
+  block:
+  - name: create new dir
+    ansible.builtin.file:
+      path: "{{ directory_path }}/{{ date_dir }}"
+      state: directory
+      mode: '0755'
+
+  - name: create new index from date
+    ansible.builtin.template:
+      src: template.html.j2
+      dest: "{{ directory_path }}/{{ date_dir }}/{{ date_dir }}.html"
+
+  - name: Insert a line after a specific pattern
+    lineinfile:
+      path: /home/rippa/compliance_reports/index.html
+      line: "<li><a href=\"{{ date_dir }}/{{ date_dir }}.html\">{{ date_dir }}</a></li>"
+      insertafter: (<!--new-->)

@@ -1,3 +1,5 @@
+### DEPRICATED!
+
 - name: Check for the existence of a folder
   ansible.builtin.stat:
     path: /home/rippa/compliance_reports
