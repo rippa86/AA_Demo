@@ -67,9 +67,9 @@
       (output.stderr != ""))
     when: not re_run
     
-    ansible.builtin.fail:
-    when: 
-      - "error" in output.msg
+  - ansible.builtin.fail:
+    when:
+      - '"error" in output.msg'
       - not re_run
   rescue:
   - name: fetch and rebase
