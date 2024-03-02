@@ -12,7 +12,7 @@
   #     hostname: rhel-db2
   #   register: result
   - set_fact: 
-      ahost: "{{ ansible_facts.ansible_hostname }}"
+      ahost: "{{ ansible_hostname }}"
   - name: Fetch file to local machine
     fetch:
       src: "/tmp/openscap/202403020455_results/{{ ahost }}.html"
