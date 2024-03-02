@@ -27,3 +27,11 @@
         value: 0
         state: present
         reload: yes
+
+    - name: dnf install stuff
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - squid
+        - telnet-server
