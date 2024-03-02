@@ -93,10 +93,10 @@
         incident_state: 7
     register: snow_var
 
-  - name: Replace "fail" with "pass"
-    update_result:
-      path: "{{ file_path }}{{ date_dir }}/{{ date_dir }}.html"
-      hostname: "{{ dir_host }}"
+  # - name: Replace "fail" with "pass"
+  #   update_result:
+  #     path: "{{ file_path }}{{ date_dir }}/{{ date_dir }}.html"
+  #     hostname: "{{ file_host }}"
 
   # - name: Add output directory to git
   #   ansible.builtin.shell: |
@@ -105,3 +105,18 @@
   #     chdir: /home/rippa/compliance_reports/
   #   ignore_errors: true
   #   register: output
+
+- name: update result file
+  hosts: rhel-aap.local
+  vars:
+    file_host: "{{ inc_host }}"
+  tasks:
+  - name: set some groovy facts
+    ansible.builtin.set_fact:
+      file_host: "{{ inc_host | split('.') | first }}"
+      date_dir: "{{ ansible_date_time.date }}"
+
+  - name: Replace "fail" with "pass"
+    update_result:
+      path: "/var/www/html/{{ date_dir }}/{{ date_dir }}.html"
+      hostname: "{{ file_host }}"
