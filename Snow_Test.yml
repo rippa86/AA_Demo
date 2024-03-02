@@ -4,6 +4,7 @@
     scheduled_job: aaaaa
     inc_sysid: 8935604397648210d781f141f053af6c
     hostname: rhel-db2
+  become: yes
   tasks:
   # - name: Replace Pass with Fail for lines containing hostname.local
   #   update_result:
