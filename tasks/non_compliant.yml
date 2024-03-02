@@ -102,6 +102,7 @@
     controller_username: "{{ aap_username }}"
     controller_password: "{{ aap_password }}"
     job_template: OSCAP Self Healing
+    validate_certs: no
     extra_vars:
       inc_host: "{{ file_host }}.local"
       inc_number: "{{ inc_number }}"

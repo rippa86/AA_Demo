@@ -27,6 +27,6 @@
 
   - name: Insert a line after a specific pattern
     lineinfile:
-      path: /home/rippa/compliance_reports/index.html
+      path: "{{ directory_path }}/index.html"
       line: "<li><a href=\"{{ date_dir }}/{{ date_dir }}.html\">{{ date_dir }}</a></li>"
       insertafter: (<!--new-->)
