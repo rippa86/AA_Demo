@@ -13,7 +13,7 @@
     name: scap
   vars:
     oscap_hostname: "{{ file_host }}"
-    dir_name: "{{ datetime }}"
+    dir_name: "{{ date_dir }}"
     report: false
     change_dir: "{{ directory_path }}/{{ date_dir }}"
 
