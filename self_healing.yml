@@ -27,6 +27,12 @@
     ansible.builtin.set_fact:
       file_path: "/tmp/openscap/{{ date_dir }}_results/"
 
+  - name: create oscap results directoryz
+    ansible.builtin.file:
+      path: "{{ file_path }}"
+      state: directory
+      mode: '0755'
+
   - name: Download a file using wget
     ansible.builtin.shell:
       cmd: "wget -O {{ file_path }}/{{ file_host }}_fix.sh http://192.168.64.11:80/{{ date_dir }}/{{ file_host }}_fix.sh"
