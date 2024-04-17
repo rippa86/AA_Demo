@@ -35,7 +35,7 @@
 
   - name: Download a file using wget
     ansible.builtin.shell:
-      cmd: "wget -O {{ file_path }}/{{ file_host }}_fix.sh http://192.168.64.11:80/{{ date_dir }}/{{ file_host }}_fix.sh"
+      cmd: "wget -O {{ file_path }}/{{ file_host }}_fix.sh http://{{ httpd_host }}:80/{{ date_dir }}/{{ file_host }}_fix.sh"
     args:
       creates: "{{ file_path }}/{{ file_host }}_fix.sh"
 
@@ -113,7 +113,7 @@
   #   register: output
 
 - name: update result file
-  hosts: rhel-aap.local
+  hosts: "{{ httpd_host }}"
   vars:
     file_host: "{{ inc_host }}"
   tasks:
