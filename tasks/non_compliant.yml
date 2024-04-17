@@ -45,26 +45,27 @@
   ansible.builtin.set_fact:
     set_rrule: "{{ now(utc=true,fmt='%Y%m%dT%H%M%SZ') }}"
 
-- name: Create a new token using username/password
-  ansible.controller.schedule:
-    controller_host: "{{ aap_host }}"
-    controller_username: "{{ aap_username }}"
-    controller_password: "{{ aap_password }}"
-    name: "Self_healing {{ file_host }}.local"
-    validate_certs: false
-    state: present
-    unified_job_template: OSCAP Self Healing
-    rrule: "DTSTART:{{ set_rrule }} RRULE:INTERVAL=1;COUNT=1;FREQ=MINUTELY"
-    extra_data:
-      inc_host: "{{ file_host }}.local"
-      inc_sysid: "{{ inc_sysid }}"
-      inc_number: "{{ inc_number }}"
-  register: result
+# - name: Create a new token using username/password
+#   ansible.controller.schedule:
+#     controller_host: "{{ aap_host }}"
+#     controller_username: "{{ aap_username }}"
+#     controller_password: "{{ aap_password }}"
+#     name: "Self_healing {{ file_host }}.local"
+#     validate_certs: false
+#     state: present
+#     unified_job_template: OSCAP Self Healing
+#     rrule: "DTSTART:{{ set_rrule }} RRULE:INTERVAL=1;COUNT=1;FREQ=MINUTELY"
+#     extra_data:
+#       inc_host: "{{ file_host }}.local"
+#       inc_sysid: "{{ inc_sysid }}"
+#       inc_number: "{{ inc_number }}"
+#   register: result
 
 - name: set fact for msg
   ansible.builtin.set_fact:
-    scheduled_job: "AAP Job Scheduled. URL to Pause or Cancel: https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}"
-
+    scheduled_job: "AAP Job Scheduled. URL to Pause or Cancel: Head to AAP."
+    #scheduled_job: "AAP Job Scheduled. URL to Pause or Cancel: https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}"
+  
 - name: Update ServiceNow ticket to indicate start
   servicenow.itsm.api:
     instance:
@@ -96,14 +97,14 @@
     channel: "#devops"
     msg: '<{{ snow_instance }}now/sow/record/incident/{{ inc_sysid }}{{ inc_number }}|{{ inc_number }}> - Ansible has detected RHEL9 host *{{ file_host }}.local* is non compliant according to E8 Pollicy. \n Self-healing playbook has been scheduled here: <https://192.168.64.11:8443/#/templates/job_template/16/schedules/{{ result.id }}|AAP Scheduled Task  '
   when: slack
-- name: me being sneaky
-  ansible.controller.job_launch:
-    controller_host: "{{ aap_host }}"
-    controller_username: "{{ aap_username }}"
-    controller_password: "{{ aap_password }}"
-    job_template: OSCAP Self Healing
-    validate_certs: no
-    extra_vars:
-      inc_host: "{{ file_host }}.local"
-      inc_number: "{{ inc_number }}"
-      inc_sysid: "{{ inc_sysid }}"
+# - name: me being sneaky
+#   ansible.controller.job_launch:
+#     controller_host: "{{ aap_host }}"
+#     controller_username: "{{ aap_username }}"
+#     controller_password: "{{ aap_password }}"
+#     job_template: OSCAP Self Healing
+#     validate_certs: no
+#     extra_vars:
+#       inc_host: "{{ file_host }}.local"
+#       inc_number: "{{ inc_number }}"
+#       inc_sysid: "{{ inc_sysid }}"
