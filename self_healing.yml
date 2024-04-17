@@ -35,7 +35,7 @@
 
   - name: Download a file using wget
     ansible.builtin.shell:
-      cmd: "wget -O {{ file_path }}/{{ file_host }}_fix.sh http://{{ httpd_host }}:80/{{ date_dir }}/{{ ansible_factsansible_hostname }}_fix.sh"
+      cmd: "wget -O {{ file_path }}/{{ file_host }}_fix.sh http://{{ httpd_host }}:80/{{ date_dir }}/{{ ansible_facts.ansible_hostname }}_fix.sh"
     args:
       creates: "{{ file_path }}/{{ file_host }}_fix.sh"
 
