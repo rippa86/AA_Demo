@@ -53,7 +53,7 @@
     src: "{{ item.path }}"
     dest: /var/www/html/{{ datetime }}/
   loop: "{{ found_files.files }}"
-  delegate_to: rhel-aap.local
+  delegate_to: "{{ httpd_host }}"
 
 # - name: clone git directory
 #   ansible.builtin.include_tasks: tasks/git_clone.yml
