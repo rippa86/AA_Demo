@@ -25,7 +25,7 @@
 
   - name: set fact for dir
     ansible.builtin.set_fact:
-      file_path: "/tmp/openscap/{{ date_dir }}_results/"
+      file_path: "/tmp/openscap/{{ date_dir }}_results"
 
   - name: create oscap results directoryz
     ansible.builtin.file:
@@ -35,7 +35,7 @@
 
   - name: Download a file using wget
     ansible.builtin.shell:
-      cmd: "wget -O {{ file_path }}/{{ file_host }}_fix.sh http://{{ httpd_host }}:80/{{ date_dir }}/{{ file_host }}_fix.sh"
+      cmd: "wget -O {{ file_path }}/{{ file_host }}_fix.sh http://{{ httpd_host }}:80/{{ date_dir }}/{{ ansible_factsansible_hostname }}_fix.sh"
     args:
       creates: "{{ file_path }}/{{ file_host }}_fix.sh"
 
