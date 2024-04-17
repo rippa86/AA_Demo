@@ -125,4 +125,4 @@
   - name: Replace "fail" with "pass"
     update_result:
       path: "/var/www/html/{{ date_dir }}/{{ date_dir }}.html"
-      hostname: "{{ file_host }}"
+      hostname: "{{ act_host }}"
