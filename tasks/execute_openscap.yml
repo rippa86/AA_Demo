@@ -40,20 +40,31 @@
   loop:
     - "xml"
     - "html"
+- block:
+  - name: Copy file from local machine to destination
+    ansible.builtin.synchronize:
+      src: "/tmp/openscap/{{ datetime }}_results/{{ hostname }}.{{ item }}"
+      dest: "/var/www/html/{{ datetime }}/"
+    loop:
+      - "xml"
+      - "html"
+    delegate_to: "{{ httpd_host }}"
+  rescue:
 
-- name: Find .html files
-  ansible.builtin.find:
-    paths: /tmp/
-    patterns: ['*.html', '*.xml']
-  register: found_files
-  delegate_to: localhost
-
-- name: Copy file from local machine to destination
-  copy:
-    src: "{{ item.path }}"
-    dest: /var/www/html/{{ datetime }}/
-  loop: "{{ found_files.files }}"
-  delegate_to: "{{ httpd_host }}"
+  - name: Find .html files
+    ansible.builtin.find:
+      paths: /tmp/
+      patterns: ['*.html', '*.xml']
+    register: found_files
+    delegate_to: localhost
+    become: false
+    
+  - name: Copy file from local machine to destination
+    copy:
+      src: "{{ item.path }}"
+      dest: /var/www/html/{{ datetime }}/
+    loop: "{{ found_files.files }}"
+    delegate_to: "{{ httpd_host }}"
 
 # - name: clone git directory
 #   ansible.builtin.include_tasks: tasks/git_clone.yml
